@@ -113,3 +113,20 @@
     (1- n)))
 
 
+;; FIX A BUG IN ESHELL SO I CAN RUN SOURCES
+(defadvice eshell-gather-process-output (before absolute-cmd (command args) act)
+  (setq command (file-truename command)))
+
+
+;; MAKE SSH THE DEFAULT TRAMP MODE
+(require 'tramp) (setq tramp-default-method "ssh")
+
+;; RESTART SHELL PROCESS
+(defun restart-shell () (interactive) (shell (current-buffer)))
+
+;; RUN SHELL ON RDS
+(defun rds-shell (arg)
+  (interactive "P")
+  (let ((default-directory "/ssh:veeva@sg1.linkxion.com:"))
+    (setq current-prefix-arg arg)
+    (call-interactively 'shell)))

@@ -1,3 +1,23 @@
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (leuven)))
+ '(package-selected-packages (quote (sqlite python-mode magit csv-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
 (server-start)
 (add-to-list 'exec-path "/usr/local/bin/")
 (add-to-list 'exec-path "/usr/local/mysql/bin")
@@ -54,7 +74,7 @@
 ;;
 (defadvice sql-mysql (around sql-mysql-around activate)
   "SSH to linux, then connect"
-  (let ((default-directory "/ssh:veeva@sg1.linkxion.com:"))
+  (let ((default-directory "/ssh:veeva@173.255.143.2:"))
     ad-do-it))
 
 ;; MYSQL port
@@ -81,18 +101,8 @@
 (setq mac-command-modifier 'control)
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (leuven))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+
 
 ;; BACKUPS
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -105,13 +115,33 @@
 
 ;; MAKE 4-BASE36 ID
 (defun base-36 (n)
-  (interactive)
-  (defconst char-list "abcdefghijklmnopqrstuvwxyz0123456789")
+  (defconst char-list "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
   (defvar encoding "")
+  (setq encoding "")
   (while (> n 0)
-    (setq encoding (concat encoding (elt char-list (random 36))))
-    (1- n)))
+    (setq encoding (concat encoding (string (elt char-list (random 36)))))
+    (setq n (- n 1)))
+  encoding)
 
+(defun org-id-get-create ()
+    (interactive)
+    (org-set-property "ID" (base-36 4)))
+
+(add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
+
+;; ORG MODE: ADD CUSTOMER
+(defun org-add-customer (arg)
+  (interactive "MCustomer:")
+  (org-set-property "CUSTOMER" arg))
+
+(eval-after_load 'org-mode
+		 '(define-key org-mode-map (kbd "C-c a")))
+
+;; ORG MODE BINDING FOR capture new item
+(eval-after-load 'org-mode
+  '(define-key org-mode-map (kbd "C-c i") 'org-id-get-create))
+
+(setq org-default-notes-file (concat org-directory "/notes.org"))
 
 ;; FIX A BUG IN ESHELL SO I CAN RUN SOURCES
 (defadvice eshell-gather-process-output (before absolute-cmd (command args) act)
@@ -127,6 +157,6 @@
 ;; RUN SHELL ON RDS
 (defun rds-shell (arg)
   (interactive "P")
-  (let ((default-directory "/ssh:veeva@sg1.linkxion.com:"))
+  (let ((default-directory "/ssh:veeva@173.255.143.2:"))
     (setq current-prefix-arg arg)
     (call-interactively 'shell)))

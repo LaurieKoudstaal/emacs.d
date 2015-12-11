@@ -1,3 +1,10 @@
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (server-start)
 (add-to-list 'exec-path "/usr/local/bin/")
 (add-to-list 'exec-path "/usr/local/mysql/bin")
@@ -15,6 +22,16 @@
 	 (getenv "PATH")
 	 )
 	)
+
+;; GET RID OF TOOLBAR
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+
+;; HANDY F1
+(global-set-key (kbd "<f1>") 'execute-extended-command)
+
+;; ADD ASPELL
+(setq-default ispell-program-name "/usr/local/bin/aspell")
+
 
 ;; TSV in ORGMODE
 (defun my-export-to-parent ()
@@ -86,7 +103,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (leuven))))
+ '(custom-enabled-themes (quote (leuven)))
+ '(package-selected-packages (quote (web-mode org org-journal magit))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -130,3 +148,11 @@
   (let ((default-directory "/ssh:veeva@sg1.linkxion.com:"))
     (setq current-prefix-arg arg)
     (call-interactively 'shell)))
+
+;; FOR JSX
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+(defadvice web-mode-highlight-part (around tweak-jsx activate)
+  (if (equal web-mode-content-type "jsx")
+      (let ((web-mode-enable-part-face nil))
+        ad-do-it)
+    ad-do-it))

@@ -10,6 +10,7 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -146,14 +147,14 @@
   (interactive "MCustomer:")
   (org-set-property "CUSTOMER" arg))
 
-(eval-after_load 'org-mode
+(eval-after-load 'org-mode
 		 '(define-key org-mode-map (kbd "C-c a")))
 
 ;; ORG MODE BINDING FOR capture new item
 (eval-after-load 'org-mode
   '(define-key org-mode-map (kbd "C-c i") 'org-id-get-create))
 
-(setq org-default-notes-file (concat org-directory "/notes.org"))
+;; (setq org-default-notes-file (concat org-directory "/notes.org"))
 
 
  '(custom-enabled-themes (quote (leuven)))

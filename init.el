@@ -7,7 +7,7 @@
 (add-to-list 'package-archives
              '("elpy" . "http://jorgenschaefer.github.io/packages/"))
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
@@ -132,9 +132,62 @@
 (require 'ido)
 (ido-mode t)
 
-
 ;; START SERVER SO EMACSCLIENT WORKS
 (server-start)
+
+;; MULTIPLE CURSORS
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+;; EVIL MODE
+(add-to-list 'load-path "~/.emacs.d/undo-tree")
+(require 'undo-tree)
+(global-undo-tree-mode 1)
+
+;; (add-to-list 'load-path "~/.emacs.d/evil")
+;; (require 'evil)
+;; (evil-mode 1)
+
+;; JS2 MODE
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+
+;; mssql
+;; (add-to-list 'load-path "~/Documents/sources/mssql/emacs/")
+;; (require 'sql-ms)
+
+;; FIX SQL MODE TO USE sqsh
+(set 'sql-ms-program "sqsh")
+   (add-hook 'sql-interactive-mode-hook
+            (lambda ()
+              (setq sql-prompt-regexp "^[_[:alpha:]]*[=][#>] ")
+              (setq sql-prompt-cont-regexp "^[_[:alpha:]]*[-][#>] ")))
+;; (setq sql-ms-options (remove "-n" sql-ms-options))
+
+;; (defun sql-comint-ms (product options)
+;;   "Create comint buffer and connect to Microsoft SQL Server."
+;;   ;; Put all parameters to the program (if defined) in a list and call
+;;   ;; make-comint.
+;;   (let ((params options))
+;;     (if (not (string= "" sql-server))
+;;         (setq params (append (list "-S" sql-server) params)))
+;;     (if (not (string= "" sql-database))
+;;         (setq params (append (list "-D" sql-database) params)))
+;;     (if (not (string= "" sql-user))
+;;     (setq params (append (list "-U" sql-user) params)))
+;;     (if (not (string= "" sql-password))
+;;     (setq params (append (list "-P" sql-password) params))
+;;       (if (string= "" sql-user)
+;;       ;; if neither user nor password is provided, use system
+;;       ;; credentials.
+;;       (setq params (append (list "-E") params))
+;;     ;; If -P is passed to ISQL as the last argument without a
+;;     ;; password, it's considered null.
+;;     (setq params (append params (list "-P")))))
+;;     (sql-comint product params)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -148,8 +201,8 @@
  '(custom-enabled-themes (quote (twilight-bright)))
  '(custom-safe-themes
    (quote
-    ("39e93a10eb292941640adfe28509e0c3eeb84e30cbfed6ef9841be136081ca34" "0ae52e74c576120c6863403922ee00340a3bf3051615674c4b937f9c99b24535" "bcd39b639704f6f28ab61ad1ac8eb4625be77d027b4494059e8ada22ce281252" "9e76732c9af8e423236ff8e37dd3b9bc37dacc256e42cc83810fb824eaa529b9" "07840b49217157323d6ea4ccbdecc451b5989ebdc6e06cb0b4d742a141475a44" "08dc5159473fa2250619880857eee06b7f4067f5f15b0ee8878c91f135cef6d5" "1a2b131a7844bad234832963d565097efc88111b196fb75757885c159c5f8137" "46b20113556c07c1173d99edc6609473a106c13871da8fc9acb6534224f1e3e4" "3a3917dbcc6571ef3942c2bf4c4240f70b5c4bc0b28192be6d3f9acd83607a24" "90b1aeef48eb5498b58f7085a54b5d2c9efef2bb98d71d85e77427ce37aec223" "3fb38c0c32f0b8ea93170be4d33631c607c60c709a546cb6199659e6308aedf7" "4af6fad34321a1ce23d8ab3486c662de122e8c6c1de97baed3aa4c10fe55e060" "c1390663960169cd92f58aad44ba3253227d8f715c026438303c09b9fb66cdfb" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "37def0fac11a4890922af9febc8394e3b6e3c68904a294a2d440b1904e979c7e" "ad950f1b1bf65682e390f3547d479fd35d8c66cafa2b8aa28179d78122faa947" "4f5bb895d88b6fe6a983e63429f154b8d939b4a8c581956493783b2515e22d6d" "12b4427ae6e0eef8b870b450e59e75122d5080016a9061c9696959e50d578057" "c58382b9c4fff1aa94b8e3f0f81b0212bb554e83f76957bab735f960a4c441b1" default)))
- '(fci-rule-color "#f1c40f")
+    ("0022e0b80aaf697a4dc41322d5270aff5c4dae342c09a559abb91fd2bc64e755" "b9183de9666c3a16a7ffa7faaa8e9941b8d0ab50f9aaba1ca49f2f3aec7e3be9" "39e93a10eb292941640adfe28509e0c3eeb84e30cbfed6ef9841be136081ca34" "0ae52e74c576120c6863403922ee00340a3bf3051615674c4b937f9c99b24535" "bcd39b639704f6f28ab61ad1ac8eb4625be77d027b4494059e8ada22ce281252" "9e76732c9af8e423236ff8e37dd3b9bc37dacc256e42cc83810fb824eaa529b9" "07840b49217157323d6ea4ccbdecc451b5989ebdc6e06cb0b4d742a141475a44" "08dc5159473fa2250619880857eee06b7f4067f5f15b0ee8878c91f135cef6d5" "1a2b131a7844bad234832963d565097efc88111b196fb75757885c159c5f8137" "46b20113556c07c1173d99edc6609473a106c13871da8fc9acb6534224f1e3e4" "3a3917dbcc6571ef3942c2bf4c4240f70b5c4bc0b28192be6d3f9acd83607a24" "90b1aeef48eb5498b58f7085a54b5d2c9efef2bb98d71d85e77427ce37aec223" "3fb38c0c32f0b8ea93170be4d33631c607c60c709a546cb6199659e6308aedf7" "4af6fad34321a1ce23d8ab3486c662de122e8c6c1de97baed3aa4c10fe55e060" "c1390663960169cd92f58aad44ba3253227d8f715c026438303c09b9fb66cdfb" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "37def0fac11a4890922af9febc8394e3b6e3c68904a294a2d440b1904e979c7e" "ad950f1b1bf65682e390f3547d479fd35d8c66cafa2b8aa28179d78122faa947" "4f5bb895d88b6fe6a983e63429f154b8d939b4a8c581956493783b2515e22d6d" "12b4427ae6e0eef8b870b450e59e75122d5080016a9061c9696959e50d578057" "c58382b9c4fff1aa94b8e3f0f81b0212bb554e83f76957bab735f960a4c441b1" default)))
+ '(fci-rule-color "#f1c40f" t)
  '(hl-paren-background-colors (quote ("#2492db" "#95a5a6" nil)))
  '(hl-paren-colors (quote ("#ecf0f1" "#ecf0f1" "#c0392b")))
  '(nrepl-message-colors
@@ -157,11 +210,14 @@
     ("#336c6c" "#205070" "#0f2050" "#806080" "#401440" "#6c1f1c" "#6b400c" "#23733c")))
  '(package-selected-packages
    (quote
-    (multiple-cursors csv-mode gandalf-theme twilight-bright-theme org-plus-contrib magit exec-path-from-shell elpy)))
+    (go-mode minimal-theme basic-theme plan9-theme jsx-mode web-mode skewer-mode js2-mode better-defaults el-get multiple-cursors csv-mode gandalf-theme twilight-bright-theme org-plus-contrib magit exec-path-from-shell elpy)))
  '(sml/active-background-color "#34495e")
  '(sml/active-foreground-color "#ecf0f1")
  '(sml/inactive-background-color "#dfe4ea")
  '(sml/inactive-foreground-color "#34495e")
+ '(sql-ms-login-params (quote (user password server)))
+ '(sql-ms-options nil)
+ '(sql-sybase-program "/usr/local/bin/sqsh")
  '(vc-annotate-background "#ecf0f1")
  '(vc-annotate-color-map
    (quote

@@ -28,7 +28,7 @@
 (require 'init-gui)
 (require 'init-org)
 (require 'init-python-mode)
-
+(require 'init-smex)
 
 
 ;; WHITESPACE SETTINGS

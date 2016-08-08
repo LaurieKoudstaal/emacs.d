@@ -1,4 +1,4 @@
-(require 'smex)
+(require-package 'smex)
 (smex-initialize)
 
 (provide 'init-smex)

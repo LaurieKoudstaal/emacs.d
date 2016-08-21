@@ -6,7 +6,7 @@
 ;; RUN SHELL ON RDS
 (defun rds-shell (arg)
   (interactive "P")
-  (let ((default-directory "/ssh:veeva@173.255.143.2:"))
+  (let ((default-directory "/ssh:veeva@access.veeva.com.au:~/"))
     (setq current-prefix-arg arg)
     (call-interactively 'shell)))
 

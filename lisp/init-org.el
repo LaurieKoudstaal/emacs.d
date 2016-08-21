@@ -263,5 +263,35 @@ typical word processor."
 ;; Open the current TSV file as an Org table
 (global-set-key (kbd "C-c |") 'my-edit-dsv-as-orgtbl)
 
-(provide 'init-org)
 
+
+;;; ID FOR NEW ITEMS
+;; MAKE 4-BASE36 ID
+(defun lkk/base-36 (n)
+  (defconst char-list "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+  (defvar encoding "")
+  (setq encoding "")
+  (while (> n 0)
+    (setq encoding (concat encoding (string (elt char-list (random 36)))))
+    (setq n (- n 1)))
+  encoding)
+
+(defun lkk/org-id-get-create ()
+    (interactive)
+    (org-set-property "ID" (lkk/base-36 4)))
+
+(add-hook 'org-capture-prepare-finalize-hook 'lkk/org-id-get-create)
+
+;; ORG MODE: ADD CUSTOMER
+(defun lkk/org-add-customer (arg)
+  (interactive "MCustomer:")
+  (org-set-property "CUSTOMER" arg))
+
+(eval-after-load 'org-mode
+		 '(define-key org-mode-map (kbd "C-c a") 'lkk/org-add-customer))
+
+;; ORG MODE BINDING FOR capture new item
+(eval-after-load 'org-mode
+     '(define-key org-mode-map (kbd "C-c i") 'lkk/org-id-get-create))
+
+(provide 'init-org)

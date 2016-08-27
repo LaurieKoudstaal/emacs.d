@@ -58,7 +58,7 @@ typical word processor."
 
 (setq org-capture-templates
       `(("t" "todo" entry (file "no-project.org")  ; "" => org-default-notes-file
-         "* NEXT %?\n%U\n" :clock-resume t)
+         "* TODO %?\n%U\n" :clock-resume t)
         ("n" "note" entry (file "no-project.org")
          "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
         ))
@@ -95,7 +95,7 @@ typical word processor."
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
               (sequence "PROJECT(p)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
               (sequence "WAITING(w@/!)" "DELEGATED(e!)" "HOLD(h)" "|" "CANCELLED(c@/!)")))
-      org-todo-repeat-to-state "NEXT")
+      org-todo-repeat-to-state "TODO")
 
 (setq org-todo-keyword-faces
       (quote (("NEXT" :inherit warning)
@@ -292,6 +292,16 @@ typical word processor."
 
 ;; ORG MODE BINDING FOR capture new item
 (eval-after-load 'org-mode
-     '(define-key org-mode-map (kbd "C-c i") 'lkk/org-id-get-create))
+  '(define-key org-mode-map (kbd "C-c i") 'lkk/org-id-get-create))
+
+;; ADD ORG LANGUAGES
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((R . t)
+   (python . t)
+   (sh . t)
+   (sql . t)
+   (sqlite . t)
+   (awk . t)))
 
 (provide 'init-org)

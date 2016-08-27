@@ -10,4 +10,6 @@
 (add-hook 'god-mode-enabled-hook 'my-update-cursor)
 (add-hook 'god-mode-disabled-hook 'my-update-cursor)
 
+(eval-after-load 'god-mode (god-mode))
+
 (provide 'init-god-mode)

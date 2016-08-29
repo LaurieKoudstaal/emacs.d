@@ -11,5 +11,5 @@
 ;  (custom-set-variables `(custom-enabled-themes (quote ,custom-enabled-themes))))
 ;
 ;(add-hook 'after-init-hook 'reapply-themes)
-(load-theme 'leuven)
+(load-theme 'zenburn)
 (provide 'init-themes)

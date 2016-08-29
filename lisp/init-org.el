@@ -294,4 +294,6 @@ typical word processor."
 (eval-after-load 'org-mode
      '(define-key org-mode-map (kbd "C-c i") 'lkk/org-id-get-create))
 
+(setq org-hid-leading-stars t)
+(require-package 'org-bullets)
 (provide 'init-org)

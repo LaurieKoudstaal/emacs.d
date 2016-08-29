@@ -22,6 +22,7 @@
 (require 'init-themes)
 (require 'init-gui)
 (require 'init-org)
+(require 'init-org-bullets)
 (require 'init-python-mode)
 (require 'init-smex)
 (require 'init-multiple-cursors)
@@ -37,4 +38,5 @@
 (require 'init-undo-tree)
 (require 'init-js2)
 (require 'init-mssql)
+
 

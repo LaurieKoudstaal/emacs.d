@@ -25,7 +25,6 @@
 (require 'init-python-mode)
 (require 'init-smex)
 (require 'init-multiple-cursors)
-(require 'init-god-mode)
 (require 'init-whitespace)
 (require 'init-magit)
 (require 'init-backups)
@@ -38,3 +37,14 @@
 (require 'init-js2)
 (require 'init-mssql)
 
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+;;----------------------------------------------------------------------------
+;; Allow users to provide an optional "init-local" containing personal settings
+;;----------------------------------------------------------------------------
+(when (file-exists-p (expand-file-name "init-local.el" user-emacs-directory))
+  (error "Please move init-local.el to ~/.emacs.d/lisp"))
+(require 'init-local nil t)
+
+(provide 'init)

@@ -18,8 +18,7 @@
       org-html-validation-link nil
       org-export-kill-product-buffer-when-displayed t
       org-tags-column 80
-      org-directory "~/Org")
-(setq org-agenda-files (list org-directory))
+      )
 
 (define-minor-mode prose-mode
   "Set up a buffer for prose editing.
@@ -57,17 +56,17 @@ typical word processor."
 (global-set-key "\C-cc" 'org-capture)
 
 (setq org-capture-templates
-      `(("t" "todo" entry (file "no-project.org")  ; "" => org-default-notes-file
-         "* NEXT %?\n%U\n" :clock-resume t)
-        ("n" "note" entry (file "no-project.org")
+      `(("t" "todo" entry (file "projects.org" "Unfiled")  ; "" => org-default-notes-file
+         "* TODO %?\n%U\n" :clock-resume t)
+        ("n" "note" entry (file "projects.org" "Unfiled")
          "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
         ))
 
 ;; REFILING
 (setq org-refile-use-cache nil)
 
-; Targets include this file and any file contributing to the agenda - up to 1 levels deep
-(setq org-refile-targets '((nil :maxlevel . 1) (org-agenda-files :maxlevel . 1)))
+; Targets include this file and any file contributing to the agenda - up to 2 levels deep
+(setq org-refile-targets '((nil :maxlevel . 2) (org-agenda-files :maxlevel . 2)))
 
 
 ;; Exclude DONE state tasks from refile targets
@@ -292,7 +291,17 @@ typical word processor."
 
 ;; ORG MODE BINDING FOR capture new item
 (eval-after-load 'org-mode
-     '(define-key org-mode-map (kbd "C-c i") 'lkk/org-id-get-create))
+  '(define-key org-mode-map (kbd "C-c i") 'lkk/org-id-get-create))
+
+;; ADD ORG LANGUAGES
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((R . t)
+   (python . t)
+   (sh . t)
+   (sql . t)
+   (sqlite . t)
+   (awk . t)))
 
 (setq org-hid-leading-stars t)
 (require-package 'org-bullets)

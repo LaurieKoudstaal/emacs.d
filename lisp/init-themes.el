@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ;; (require-package 'twilight-bright-theme)
 
 ;; (setq-default custom-enabled-themes '(twilight-bright))
@@ -12,4 +13,7 @@
 ;
 ;(add-hook 'after-init-hook 'reapply-themes)
 (load-theme 'zenburn)
+=======
+>>>>>>> df157a4a2b61badaa9560aa5898486fe47d9d631
 (provide 'init-themes)
+

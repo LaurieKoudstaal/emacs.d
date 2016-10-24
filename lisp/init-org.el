@@ -55,11 +55,31 @@ typical word processor."
 ;; CAPTURING
 (global-set-key "\C-cc" 'org-capture)
 
+(defun my/task-template ()
+  (concat "** NEXT "
+	  "%^{"
+	  "|Action|Address|Ask|Avoid|Buy|Change|Clarify|Collect|Commend|"
+	  "Confront|Consider|Create|Decide|Defer|Develop|Discard|Do again|"
+	  "Download|Enter|File|Follow up|Improve|Increase|Inform|Inquire|"
+	  "Maintain|Measure|Monitor|Order|Phone|Prioritize|Purchase|"
+	  "Question|Reduce|Remember|Repair|Reply|Report|Research|Resolve|"
+	  "Review|Schedule|Sell|Send|Service|Specify|Start|Stop|Suggest|Tidy|"
+	  "Train|Update|Upgrade|Validate|Write"
+	  "} %?\n%U\n"))
+
+(defun my/project-template ()
+  (concat "** PROJECT "
+	  "%^{"
+	  "|Finalize|Resolve|Handle|Look into|Submit|Maximize|Organize|Design|"
+	  "Complete|Ensure|Research|Roll out|Update|Install|Implement|Set-up"
+	  "} %?\n%U\n"))
 (setq org-capture-templates
-      `(("t" "todo" entry (file "projects.org" "Unfiled")  ; "" => org-default-notes-file
-         "* TODO %?\n%U\n" :clock-resume t)
-        ("n" "note" entry (file "projects.org" "Unfiled")
-         "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
+      `(("t" "todo" entry (file "gtd.org" "UNGROUPED")  ; "" => org-default-notes-file
+         (function my/task-template) :clock-resume t)
+	("p" "project" entry (file "gtd.org" "PROJECTS")  ; "" => org-default-notes-file
+         (function my/project-template) :clock-resume t)
+        ("n" "note" entry (file "gtd.org" "NOTES")
+         "** %? :NOTE:\n%U\n%a\n" :clock-resume t)
         ))
 
 ;; REFILING

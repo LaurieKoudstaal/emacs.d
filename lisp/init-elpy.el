@@ -1,3 +1,4 @@
+(require-package 'elpy)
 (elpy-enable)
 
 ;; ELPY USE IPYTHON

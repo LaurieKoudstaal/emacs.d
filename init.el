@@ -18,7 +18,7 @@
 
 ;; OTHER CONFIG
 (require 'init-osx-keys)
-;; (require 'init-elpy)
+(require 'init-elpy)
 (require 'init-themes)
 (require 'init-gui)
 (require 'init-org)
@@ -37,6 +37,7 @@
 (require 'init-undo-tree)
 (require 'init-js2)
 (require 'init-mssql)
+(require 'init-god-mode)
 
 <<<<<<< HEAD
 

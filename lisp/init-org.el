@@ -342,4 +342,6 @@ typical word processor."
    (sqlite . t)
    (awk . t)))
 
+(setq org-hid-leading-stars t)
+(require-package 'org-bullets)
 (provide 'init-org)

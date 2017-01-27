@@ -21,6 +21,7 @@
 (require 'init-elpy)
 (require 'init-gui)
 (require 'init-org)
+(require 'init-org-bullets)
 (require 'init-python-mode)
 (require 'init-smex)
 (require 'init-multiple-cursors)
@@ -38,6 +39,9 @@
 (require 'init-god-mode)
 (require 'init-fonts)
 
+<<<<<<< HEAD
+
+=======
 (when (file-exists-p custom-file)
   (load custom-file))
 
@@ -51,3 +55,4 @@
 (require 'init-local nil t)
 
 (provide 'init)
+>>>>>>> df157a4a2b61badaa9560aa5898486fe47d9d631

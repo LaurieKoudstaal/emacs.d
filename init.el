@@ -19,7 +19,6 @@
 ;; OTHER CONFIG
 (require 'init-osx-keys)
 (require 'init-elpy)
-(require 'init-themes)
 (require 'init-gui)
 (require 'init-org)
 (require 'init-python-mode)
@@ -37,9 +36,12 @@
 (require 'init-js2)
 (require 'init-mssql)
 (require 'init-god-mode)
+(require 'init-fonts)
 
 (when (file-exists-p custom-file)
   (load custom-file))
+
+(require 'init-themes)
 
 ;;----------------------------------------------------------------------------
 ;; Allow users to provide an optional "init-local" containing personal settings

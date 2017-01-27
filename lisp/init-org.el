@@ -1,8 +1,10 @@
+
 (when (< emacs-major-version 24)
   (require-package 'org))
 (require-package 'org-fstree)
 (when *is-a-mac*
   (require-package 'org-mac-iCal))
+(require-package 's)
 
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
@@ -56,34 +58,32 @@ typical word processor."
 (global-set-key "\C-cc" 'org-capture)
 
 (defun my/task-template ()
-  (concat "** NEXT "
-	  "%^{"
-	  "|Action|Address|Ask|Avoid|Buy|Change|Clarify|Collect|Commend|"
-	  "Confront|Consider|Create|Decide|Defer|Develop|Discard|Do again|"
-	  "Download|Enter|File|Follow up|Improve|Increase|Inform|Inquire|"
-	  "Maintain|Measure|Monitor|Order|Phone|Prioritize|Purchase|"
-	  "Question|Reduce|Remember|Repair|Reply|Report|Research|Resolve|"
-	  "Review|Schedule|Sell|Send|Service|Specify|Start|Stop|Suggest|Tidy|"
-	  "Train|Update|Upgrade|Validate|Write"
-	  "} %?\n%U\n"))
+  (concat "** NEXT %?\n%U\n"))
 
 (defun my/project-template ()
-  (concat "** PROJECT "
-	  "%^{"
-	  "|Finalize|Resolve|Handle|Look into|Submit|Maximize|Organize|Design|"
-	  "Complete|Ensure|Research|Roll out|Update|Install|Implement|Set-up"
-	  "} %?\n%U\n"))
+  (concat "** PROJECT %?\n%U\n"))
+
+(defun my/capture-project-file ()
+  (let ((project-name (read-string "Project name: ")))
+	(expand-file-name
+	 (format "%s.org" (s-downcase
+			   (s-replace " " "-" project-name)))
+	 "~/org/project")))
+
 (setq org-capture-templates
-      `(("t" "todo" entry (file "gtd.org" "UNGROUPED")  ; "" => org-default-notes-file
+      '(("t" "todo" entry (file+headline "no-project.org" "No Project")  ; "" => org-default-notes-file
          (function my/task-template) :clock-resume t)
-	("p" "project" entry (file "gtd.org" "PROJECTS")  ; "" => org-default-notes-file
+	("p" "project" entry (file (my/capture-project-file))  ; "" => org-default-notes-file
          (function my/project-template) :clock-resume t)
-        ("n" "note" entry (file "gtd.org" "NOTES")
+        ("n" "note" entry (file+headline "gtd.org" "UNGROUPED")
          "** %? :NOTE:\n%U\n%a\n" :clock-resume t)
         ))
 
 ;; REFILING
 (setq org-refile-use-cache nil)
+
+;; Set the agenda files
+(setq org-agenda-files '("~/org" "~/org/project"))
 
 ; Targets include this file and any file contributing to the agenda - up to 2 levels deep
 (setq org-refile-targets '((nil :maxlevel . 2) (org-agenda-files :maxlevel . 2)))
@@ -112,20 +112,21 @@ typical word processor."
 ;; TO-DO SETTINGS
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
-              (sequence "PROJECT(p)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
+              (sequence "PROJECT(p)" "BACKLOG(b)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
               (sequence "WAITING(w@/!)" "DELEGATED(e!)" "HOLD(h)" "|" "CANCELLED(c@/!)")))
       org-todo-repeat-to-state "NEXT")
 
 (setq org-todo-keyword-faces
       (quote (("NEXT" :inherit warning)
-              ("PROJECT" :inherit font-lock-string-face))))
+              ("PROJECT" :inherit font-lock-string-face)
+	      ("BACKLOG" :inherit shadow))))
 
 ;; AGENDA VIEWS
 (setq-default org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3))
 
 
 (let ((active-project-match "-INBOX/PROJECT"))
-
+  
   (setq org-stuck-projects
         `(,active-project-match ("NEXT")))
 
@@ -174,7 +175,7 @@ typical word processor."
                         ;; TODO: skip if a parent is a project
                         (org-agenda-skip-function
                          '(lambda ()
-                            (or (org-agenda-skip-subtree-if 'todo '("PROJECT" "HOLD" "WAITING" "DELEGATED"))
+                            (or (org-agenda-skip-subtree-if 'todo '("PROJECT" "HOLD" "WAITING" "DELEGATED" "BACKLOG"))
                                 (org-agenda-skip-subtree-if 'nottododo '("TODO")))))
                         (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
@@ -189,6 +190,11 @@ typical word processor."
                        ((org-agenda-overriding-header "Delegated")
                         (org-agenda-tags-todo-honor-ignore-options t)
                         (org-agenda-todo-ignore-scheduled 'future)
+                        (org-agenda-sorting-strategy
+                         '(category-keep))))
+	    (tags-todo "-INBOX/BACKLOG"
+                       ((org-agenda-overriding-header "Backlog")
+                        (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
                          '(category-keep))))
             (tags-todo "-INBOX/HOLD"
@@ -283,6 +289,19 @@ typical word processor."
 (global-set-key (kbd "C-c |") 'my-edit-dsv-as-orgtbl)
 
 
+;;; ID FOR NEW ITEMS 2
+;; MAKE AN ID THAT LOOKS A BIT HUMAN READABLE
+(defun lkk/generate-human-readable-id ()
+  (defconst con-list "BCDFGHJKLMNPQRSTVWXZ")
+  (defconst vow-list "AEIOUY")
+  (defconst num-list "0123456789")
+  (defvar ret-id "")
+  (setq ret-id (concat (string (elt con-list (random 20)))
+		       (string (elt vow-list (random 6)))
+		       (string (elt con-list (random 20)))
+		       (string (elt num-list (random 10)))))
+  ret-id)
+
 
 ;;; ID FOR NEW ITEMS
 ;; MAKE 4-BASE36 ID
@@ -296,8 +315,8 @@ typical word processor."
   encoding)
 
 (defun lkk/org-id-get-create ()
-    (interactive)
-    (org-set-property "ID" (lkk/base-36 4)))
+  (interactive)
+  (org-set-property "ID" (lkk/base-36 4)))
 
 (add-hook 'org-capture-prepare-finalize-hook 'lkk/org-id-get-create)
 

@@ -1,0 +1,17 @@
+/lisp/init-local.el
+*~
+#*#
+**/#*#
+/custom.el
+/.mc-lists.el
+/.org-id-locations
+/bookmarks
+eshell
+elpa
+/ido.last
+/network-security.data
+/places
+/smex-items
+/tramp
+/undo-tree/
+url/

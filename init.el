@@ -39,6 +39,7 @@
 (require 'init-god-mode)
 (require 'init-fonts)
 (require 'init-gpg)
+(require 'init-powerline)
 
 (when (file-exists-p custom-file)
   (load custom-file))

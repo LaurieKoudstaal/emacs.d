@@ -38,6 +38,7 @@
 (require 'init-mssql)
 (require 'init-god-mode)
 (require 'init-fonts)
+(require 'init-gpg)
 
 (when (file-exists-p custom-file)
   (load custom-file))

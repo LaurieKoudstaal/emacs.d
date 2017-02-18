@@ -5,6 +5,7 @@
 (when *is-a-mac*
   (require-package 'org-mac-iCal))
 (require-package 's)
+(require 's)
 
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
@@ -61,14 +62,23 @@ typical word processor."
   (concat "** NEXT %?\n%U\n"))
 
 (defun my/project-template ()
-  (concat "** PROJECT %?\n%U\n"))
+  (concat "** PROJECT " my/project-name "\n%U\n%?"))
 
+(defun my/iterate-file-number (filename num)
+  (if (file-exists-p filename)
+      (iterate-file-number filename (+ num 1))
+    (concat filename (number-to-string num))))
+
+(setq my/project-name "default")
 (defun my/capture-project-file ()
-  (let ((project-name (read-string "Project name: ")))
-	(expand-file-name
-	 (format "%s.org" (s-downcase
-			   (s-replace " " "-" project-name)))
-	 "~/org/project")))
+  (setq my/project-name (read-string "Project name: "))
+  (let ((filename (s-left 9
+			  (s-replace " "
+				     ""
+				     (s-titleized-words my/project-name)))))
+    (expand-file-name (format "%s.org"
+			      (my/iterate-file-number filename 1))
+		      "~/org/project")))
 
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline "no-project.org" "No Project")  ; "" => org-default-notes-file
@@ -84,6 +94,8 @@ typical word processor."
 
 ;; Set the agenda files
 (setq org-agenda-files '("~/org" "~/org/project"))
+(setq org-directory "~/org")
+
 
 ; Targets include this file and any file contributing to the agenda - up to 2 levels deep
 (setq org-refile-targets '((nil :maxlevel . 2) (org-agenda-files :maxlevel . 2)))
@@ -344,4 +356,8 @@ typical word processor."
 
 (setq org-hid-leading-stars t)
 (require-package 'org-bullets)
+
+;; USE fixed-pitch FOR TABLES
+(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+
 (provide 'init-org)

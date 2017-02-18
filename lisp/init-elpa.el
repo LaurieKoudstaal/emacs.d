@@ -15,6 +15,9 @@
 ;; I understand this probably isn't needed
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
+;; So that I can add sunrise commander
+(add-to-list 'package-archives '("sunrise-commander" . "http://joseito.republika.pl/sunrise-commander/") t)
+
 ;; Enable on-demand installation of packages
 (defun require-package (package &optional min-version no-refresh)
   "Install given PACKAGE, optionally requiring MIN-VERSION.

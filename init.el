@@ -40,6 +40,7 @@
 (require 'init-fonts)
 (require 'init-gpg)
 (require 'init-powerline)
+(require 'init-org-crypt)
 
 (when (file-exists-p custom-file)
   (load custom-file))

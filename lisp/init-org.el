@@ -1,4 +1,4 @@
-
+(require-package 'org-plus-contrib)
 (when (< emacs-major-version 24)
   (require-package 'org))
 (require-package 'org-fstree)
@@ -6,6 +6,8 @@
   (require-package 'org-mac-iCal))
 (require-package 's)
 (require 's)
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(require 'org-velocity)
 
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)

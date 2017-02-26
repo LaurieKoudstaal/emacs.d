@@ -21,7 +21,7 @@
 (require 'init-elpy)
 (require 'init-gui)
 (require 'init-org)
-(require 'init-org-bullets)
+;(require 'init-org-bullets)
 (require 'init-python-mode)
 (require 'init-smex)
 (require 'init-multiple-cursors)

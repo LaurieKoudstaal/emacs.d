@@ -1,4 +1,4 @@
 (require-package 'zenburn-theme)
 (require-package 'leuven-theme)
-(load-theme 'leuven)
+(load-theme 'zenburn)
 (provide 'init-themes)

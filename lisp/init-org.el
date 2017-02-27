@@ -63,7 +63,8 @@ typical word processor."
 (defun my/task-template ()
   (concat "** NEXT %?\n%U\n"))
 
-(defun my/project-template ()
+(defun my/project-template ()  
+  (setq my/project-name (read-string "Project name: "))
   (concat "** PROJECT " my/project-name "\n%U\n%?"))
 
 (defun my/iterate-file-number (filename num)
@@ -71,23 +72,21 @@ typical word processor."
       (iterate-file-number filename (+ num 1))
     (concat filename (number-to-string num))))
 
+(defun my/convert-project-name-to-filename ()
+  (format "%s.org" 
+	  (expand-file-name
+	   (my/iterate-file-number
+	    (s-left 9 (s-replace " " "" (s-titleized-words my/project-name))))
+	   "~/egnyte/projects")))
+
 (setq my/project-name "default")
-(defun my/capture-project-file ()
-  (setq my/project-name (read-string "Project name: "))
-  (let ((filename (s-left 9
-			  (s-replace " "
-				     ""
-				     (s-titleized-words my/project-name)))))
-    (expand-file-name (format "%s.org"
-			      (my/iterate-file-number filename 1))
-		      "~/org/project")))
 
 (setq org-capture-templates
-      '(("t" "todo" entry (file+headline "no-project.org" "No Project")  ; "" => org-default-notes-file
+      '(("t" "todo" entry (file+headline "NoProject.org" "No Project")  ; "" => org-default-notes-file
          (function my/task-template) :clock-resume t)
-	("p" "project" entry (file (my/capture-project-file))  ; "" => org-default-notes-file
+	("p" "project" entry (file (my/convert-project-name-to-filename))  ; "" => org-default-notes-file
          (function my/project-template) :clock-resume t)
-        ("n" "note" entry (file+headline "gtd.org" "UNGROUPED")
+        ("n" "note" entry (file+headline "NoProject.org" "No Project")
          "** %? :NOTE:\n%U\n%a\n" :clock-resume t)
         ))
 
@@ -95,7 +94,7 @@ typical word processor."
 (setq org-refile-use-cache nil)
 
 ;; Set the agenda files
-(setq org-agenda-files '("~/org" "~/org/project"))
+(setq org-agenda-files '("~/org" "~/egnyte/projects"))
 (setq org-directory "~/org")
 
 

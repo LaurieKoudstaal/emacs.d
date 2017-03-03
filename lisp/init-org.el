@@ -63,30 +63,35 @@ typical word processor."
 (defun my/task-template ()
   (concat "** NEXT %?\n%U\n"))
 
-(defun my/project-template ()  
-  (setq my/project-name (read-string "Project name: "))
-  (concat "** PROJECT " my/project-name "\n%U\n%?"))
+(defun my/project-template ()
+  (concat "** PROJECT %?\n%U\n"))
 
 (defun my/iterate-file-number (filename num)
   (if (file-exists-p filename)
       (iterate-file-number filename (+ num 1))
     (concat filename (number-to-string num))))
 
+;; TODO: Iterate over project with same category
+(defun my/convert-project-name-to-category (project-name)
+  (let (initials)
+    (dolist (word (s-split-words (s-titleized-words project-name)) initials)
+      (setq initials (concat initials (s-left 2 word))))))
+
 (defun my/convert-project-name-to-filename ()
-  (format "%s.org" 
-	  (expand-file-name
+  (expand-file-name
+   (format "%s.org" 
 	   (my/iterate-file-number
-	    (s-left 9 (s-replace " " "" (s-titleized-words my/project-name))))
-	   "~/egnyte/projects")))
+	    (my/convert-project-name-to-category my/project-name) 1))
+	   "~/egnyte/projects"))
 
 (setq my/project-name "default")
 
 (setq org-capture-templates
-      '(("t" "todo" entry (file+headline "NoProject.org" "No Project")  ; "" => org-default-notes-file
+      '(("t" "todo" entry (file+headline "projects.org" "No Project")  ; "" => org-default-notes-file
          (function my/task-template) :clock-resume t)
-	("p" "project" entry (file (my/convert-project-name-to-filename))  ; "" => org-default-notes-file
+	("p" "project" entry (file "projects.org")  ; "" => org-default-notes-file
          (function my/project-template) :clock-resume t)
-        ("n" "note" entry (file+headline "NoProject.org" "No Project")
+        ("n" "note" entry (file+headline "projects.org" "No Project")
          "** %? :NOTE:\n%U\n%a\n" :clock-resume t)
         ))
 
@@ -94,7 +99,7 @@ typical word processor."
 (setq org-refile-use-cache nil)
 
 ;; Set the agenda files
-(setq org-agenda-files '("~/org" "~/egnyte/projects"))
+(setq org-agenda-files '("~/org/projects.org" "~/egnyte/projects"))
 (setq org-directory "~/org")
 
 
@@ -329,7 +334,7 @@ typical word processor."
 
 (defun lkk/org-id-get-create ()
   (interactive)
-  (org-set-property "ID" (lkk/base-36 4)))
+  (org-set-property "CATEGORY" (lkk/generate-human-readable-id)))
 
 (add-hook 'org-capture-prepare-finalize-hook 'lkk/org-id-get-create)
 
@@ -338,12 +343,12 @@ typical word processor."
   (interactive "MCustomer:")
   (org-set-property "CUSTOMER" arg))
 
-(eval-after-load 'org-mode
-		 '(define-key org-mode-map (kbd "C-c a") 'lkk/org-add-customer))
+;;(eval-after-load 'org-mode
+;;		 '(define-key org-mode-map (kbd "C-c a") 'lkk/org-add-customer))
 
 ;; ORG MODE BINDING FOR capture new item
-(eval-after-load 'org-mode
-  '(define-key org-mode-map (kbd "C-c i") 'lkk/org-id-get-create))
+;;(eval-after-load 'org-mode
+;;  '(define-key org-mode-map (kbd "C-c i") 'lkk/org-id-get-create))
 
 ;; ADD ORG LANGUAGES
 (org-babel-do-load-languages
@@ -360,5 +365,68 @@ typical word processor."
 
 ;; USE fixed-pitch FOR TABLES
 (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+
+
+;; define "R" as the prefix key for reviewing what happened in various
+;; time periods
+(add-to-list 'org-agenda-custom-commands
+             '("R" . "Review" )
+             )
+
+;; Common settings for all reviews
+(setq efs/org-agenda-review-settings
+      '((org-agenda-files '("~/egnyte/org/projects.org" "~/egnyte/projects"))
+        (org-agenda-show-all-dates t)
+        (org-agenda-start-with-log-mode t)
+        (org-agenda-start-with-clockreport-mode t)
+        (org-agenda-archives-mode t)
+        ;; I don't care if an entry was archived
+        (org-agenda-hide-tags-regexp
+         (concat org-agenda-hide-tags-regexp
+                 "\\|ARCHIVE"))
+      ))
+;; Show the agenda with the log turn on, the clock table show and
+;; archived entries shown.  These commands are all the same exept for
+;; the time period.
+(add-to-list 'org-agenda-custom-commands
+             `("Rw" "Week in review"
+                agenda ""
+                ;; agenda settings
+                ,(append
+                  efs/org-agenda-review-settings
+                  '((org-agenda-span 'week)
+                    (org-agenda-start-on-weekday 0)
+                    (org-agenda-overriding-header "Week in Review"))
+                  )
+                ("~/org/review/week.html")
+                ))
+
+
+(add-to-list 'org-agenda-custom-commands
+             `("Rd" "Day in review"
+                agenda ""
+                ;; agenda settings
+                ,(append
+                  efs/org-agenda-review-settings
+                  '((org-agenda-span 'day)
+                    (org-agenda-overriding-header "Week in Review"))
+                  )
+                ("~/org/review/day.html")
+                ))
+
+(add-to-list 'org-agenda-custom-commands
+             `("Rm" "Month in review"
+                agenda ""
+                ;; agenda settings
+                ,(append
+                  efs/org-agenda-review-settings
+                  '((org-agenda-span 'month)
+                    (org-agenda-start-day "01")
+                    (org-read-date-prefer-future nil)
+                    (org-agenda-overriding-header "Month in Review"))
+                  )
+                ("~/org/review/month.html")
+                ))
+
 
 (provide 'init-org)

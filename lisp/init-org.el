@@ -79,11 +79,11 @@ typical word processor."
 (setq org-refile-use-cache nil)
 
 ;; Set the agenda files
-(setq org-agenda-files '("~/org/projects.org" "~/egnyte/projects"))
+(setq org-agenda-files '("~/egnyte/projects" "~/egnyte/projects.org"))
 (setq org-directory "~/org")
 
-; Targets include this file and any file contributing to the agenda - up to 2 levels deep
-(setq org-refile-targets '((nil :maxlevel . 2) (org-agenda-files :maxlevel . 2)))
+; Targets include this file and any file contributing to the agenda - up to 3 levels deep
+(setq org-refile-targets '((nil :maxlevel . 3) (org-agenda-files :maxlevel . 3)))
 
 ;; Exclude DONE state tasks from refile targets
 (defun sanityinc/verify-refile-target ()
@@ -265,7 +265,14 @@ typical word processor."
                 ("~/org/review/month.html")
                 ))
 
-
+(add-to-list 'org-agenda-custom-commands
+	     `("Rl" "Daily review"
+	       agenda ""
+	       ,'((org-agenda-start-with-clockreport-mode t)
+		  (org-agenda-span 'day)
+		  (org-agenda-overriding-header "Daily Review"))
+	       ("~/org/review/daily.html")
+	       ))
 
 
 (add-hook 'org-agenda-mode-hook 'hl-line-mode)

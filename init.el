@@ -20,6 +20,7 @@
 (require 'init-osx-keys)
 (require 'init-elpy)
 (require 'init-gui)
+(require 'org-query)
 (require 'init-org)
 (require 'init-org-bullets)
 (require 'init-python-mode)

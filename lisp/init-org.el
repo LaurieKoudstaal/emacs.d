@@ -8,7 +8,6 @@
 (require 's)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'org-velocity)
-
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
@@ -79,11 +78,12 @@ typical word processor."
 (setq org-refile-use-cache nil)
 
 ;; Set the agenda files
-(setq org-agenda-files '("~/egnyte/projects" "~/egnyte/projects.org"))
+(setq org-agenda-files '("~/egnyte/projects.org"))
 (setq org-directory "~/org")
 
 ; Targets include this file and any file contributing to the agenda - up to 3 levels deep
-(setq org-refile-targets '((nil :maxlevel . 3) (org-agenda-files :maxlevel . 3)))
+(setq org-refile-targets '((nil :maxlevel . 3) (org-agenda-files :maxlevel . 3)
+			   ("~/egnyte/backlog.org" :maxlevel . 3)))
 
 ;; Exclude DONE state tasks from refile targets
 (defun sanityinc/verify-refile-target ()
@@ -107,7 +107,7 @@ typical word processor."
 
 ;; TO-DO SETTINGS
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
+      (quote ((sequence "TODO(t)" "NEXT(n)" "REVIEW(r)" "|" "DONE(d!/!)")
               (sequence "PROJECT(p)" "BACKLOG(b)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
               (sequence "WAITING(w@/!)" "DELEGATED(e!)" "HOLD(h)" "|" "CANCELLED(c@/!)")))
       org-todo-repeat-to-state "NEXT")
@@ -156,6 +156,9 @@ typical word processor."
                         (org-agenda-tags-todo-honor-ignore-options t)
                         (org-agenda-todo-ignore-scheduled 'future)
                         ;; TODO: skip if a parent is WAITING or HOLD
+			(org-agenda-skip-function
+			 (org-query-select "tree" (not (org-query-parent
+						    (org-query-todo '("BACKLOG"))))))
                         (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
                          '(todo-state-down effort-up category-keep))))
@@ -212,7 +215,7 @@ typical word processor."
 
 ;; Common settings for all reviews
 (setq efs/org-agenda-review-settings
-      '((org-agenda-files '("~/egnyte/org/projects.org" "~/egnyte/projects"))
+      '((org-agenda-files '("~/egnyte/org/projects.org"))
         (org-agenda-show-all-dates t)
         (org-agenda-start-with-log-mode t)
         (org-agenda-start-with-clockreport-mode t)

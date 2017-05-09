@@ -1,4 +1,4 @@
-(add-to-list 'default-frame-alist '(font . "SF Mono-12" ))
-(set-face-attribute 'default nil :font "SF Mono-12" )
-;;(set-face-font 'fixed-pitch "Menlo")
+(add-to-list 'default-frame-alist '(font . "Input Sans-11" ))
+(set-face-attribute 'default nil :font "Input Sans-11" )
+(set-face-font 'fixed-pitch "Input Mono-11")
 (provide 'init-fonts)

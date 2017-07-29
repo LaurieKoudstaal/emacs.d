@@ -78,12 +78,12 @@ typical word processor."
 (setq org-refile-use-cache nil)
 
 ;; Set the agenda files
-(setq org-agenda-files '("~/egnyte/projects.org"))
+(setq org-agenda-files '("~/egnyte/Google Drive/OpenData ANZ/Projects/projects.org"))
 (setq org-directory "~/org")
 
 ; Targets include this file and any file contributing to the agenda - up to 3 levels deep
 (setq org-refile-targets '((nil :maxlevel . 3) (org-agenda-files :maxlevel . 3)
-			   ("~/egnyte/backlog.org" :maxlevel . 3)))
+			   ("~/egnyte/Google Drive/OpenData ANZ/Projects/backlog.org" :maxlevel . 3)))
 
 ;; Exclude DONE state tasks from refile targets
 (defun sanityinc/verify-refile-target ()
@@ -118,6 +118,124 @@ typical word processor."
 	      ("BACKLOG" :inherit shadow))))
 
 ;; AGENDA VIEWS
+
+
+;; These functions are intended to list functions and
+(defun sacha/org-agenda-project-agenda ()
+  "Return the project headline and up to `sacha/org-agenda-limit-items' tasks."
+  (save-excursion
+    (let* ((marker (org-agenda-new-marker))
+           (heading
+            (org-agenda-format-item "" (org-get-heading) (org-get-category) nil))
+           (org-agenda-restrict t)
+           (org-agenda-restrict-begin (point))
+           (org-agenda-restrict-end (org-end-of-subtree 'invisible))
+           ;; Find the TODO items in this subtree
+           (list (org-agenda-get-day-entries (buffer-file-name) (calendar-current-date) :todo)))
+      (org-add-props heading
+          (list 'face 'default
+                'done-face 'org-agenda-done
+                'undone-face 'default
+                'mouse-face 'highlight
+                'org-not-done-regexp org-not-done-regexp
+                'org-todo-regexp org-todo-regexp
+                'org-complex-heading-regexp org-complex-heading-regexp
+                'help-echo
+                (format "mouse-2 or RET jump to org file %s"
+                        (abbreviate-file-name
+                         (or (buffer-file-name (buffer-base-buffer))
+                             (buffer-name (buffer-base-buffer))))))
+        'org-marker marker
+        'org-hd-marker marker
+        'org-category (org-get-category)
+        'type "tagsmatch")
+      (concat heading "\n"
+              (replace-regexp-in-string "^" "  "
+                                        (org-agenda-finalize-entries list))))))
+
+  (defun sacha/org-agenda-projects-and-tasks (match)
+    "Show TODOs for all `org-agenda-files' headlines matching MATCH."
+    (interactive "MString: ")
+    (let ((todo-only nil))
+      (if org-agenda-overriding-arguments
+          (setq todo-only (car org-agenda-overriding-arguments)
+                match (nth 1 org-agenda-overriding-arguments)))
+      (let* ((org-tags-match-list-sublevels
+              org-tags-match-list-sublevels)
+             (completion-ignore-case t)
+             rtn rtnall files file pos matcher
+             buffer)
+        (when (and (stringp match) (not (string-match "\\S-" match)))
+          (setq match nil))
+        (setq matcher (org-make-tags-matcher match)
+              match (car matcher) matcher (cdr matcher))
+        (catch 'exit
+          (if org-agenda-sticky
+              (setq org-agenda-buffer-name
+                    (if (stringp match)
+                        (format "*Org Agenda(%s:%s)*"
+                                (or org-keys (or (and todo-only "M") "m")) match)
+                      (format "*Org Agenda(%s)*" (or (and todo-only "M") "m")))))
+          (org-agenda-prepare (concat "TAGS " match))
+          (org-compile-prefix-format 'tags)
+          (org-set-sorting-strategy 'tags)
+          (setq org-agenda-query-string match)
+          (setq org-agenda-redo-command
+                (list 'org-tags-view `(quote ,todo-only)
+                      (list 'if 'current-prefix-arg nil `(quote ,org-agenda-query-string))))
+          (setq files (org-agenda-files nil 'ifmode)
+                rtnall nil)
+          (while (setq file (pop files))
+            (catch 'nextfile
+              (org-check-agenda-file file)
+              (setq buffer (if (file-exists-p file)
+                               (org-get-agenda-file-buffer file)
+                             (error "No such file %s" file)))
+              (if (not buffer)
+                  ;; If file does not exist, error message to agenda
+                  (setq rtn (list
+                             (format "ORG-AGENDA-ERROR: No such org-file %s" file))
+                        rtnall (append rtnall rtn))
+                (with-current-buffer buffer
+                  (unless (derived-mode-p 'org-mode)
+                    (error "Agenda file %s is not in `org-mode'" file))
+                  (save-excursion
+                    (save-restriction
+                      (if org-agenda-restrict
+                          (narrow-to-region org-agenda-restrict-begin
+                                            org-agenda-restrict-end)
+                        (widen))
+                      (setq rtn (org-scan-tags 'sacha/org-agenda-project-agenda matcher todo-only))
+                      (setq rtnall (append rtnall rtn))))))))
+          (if org-agenda-overriding-header
+              (insert (org-add-props (copy-sequence org-agenda-overriding-header)
+                          nil 'face 'org-agenda-structure) "\n")
+            (insert "Headlines with TAGS match: ")
+            (add-text-properties (point-min) (1- (point))
+                                 (list 'face 'org-agenda-structure
+                                       'short-heading
+                                       (concat "Match: " match)))
+            (setq pos (point))
+            (insert match "\n")
+            (add-text-properties pos (1- (point)) (list 'face 'org-warning))
+            (setq pos (point))
+            (unless org-agenda-multi
+              (insert "Press `C-u r' to search again with new search string\n"))
+            (add-text-properties pos (1- (point)) (list 'face 'org-agenda-structure)))
+          (org-agenda-mark-header-line (point-min))
+          (when rtnall
+            (insert (mapconcat 'identity rtnall "\n") ""))
+          (goto-char (point-min))
+          (or org-agenda-multi (org-agenda-fit-window-to-buffer))
+          (add-text-properties (point-min) (point-max)
+                               `(org-agenda-type tags
+                                                 org-last-args (,todo-only ,match)
+                                                 org-redo-cmd ,org-agenda-redo-command
+                                                 org-series-cmd ,org-cmd))
+          (org-agenda-finalize)
+          (setq buffer-read-only t)))))
+
+
 (setq-default org-agenda-clockreport-parameter-plist '(:link t :maxlevel 3))
 
 
@@ -215,7 +333,7 @@ typical word processor."
 
 ;; Common settings for all reviews
 (setq efs/org-agenda-review-settings
-      '((org-agenda-files '("~/egnyte/org/projects.org"))
+      '((org-agenda-files)
         (org-agenda-show-all-dates t)
         (org-agenda-start-with-log-mode t)
         (org-agenda-start-with-clockreport-mode t)
@@ -277,6 +395,11 @@ typical word processor."
 	       ("~/org/review/daily.html")
 	       ))
 
+(add-to-list 'org-agenda-custom-commands
+	     '("2" "List projects with tasks" sacha/org-agenda-projects-and-tasks
+		"+PROJECT"
+		((sacha/org-agenda-limit-items 3)))
+	       )
 
 (add-hook 'org-agenda-mode-hook 'hl-line-mode)
 

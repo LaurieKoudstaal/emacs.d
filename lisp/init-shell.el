@@ -1,5 +1,3 @@
-
-
 ;; RESTART SHELL PROCESS
 (defun restart-shell () (interactive) (shell (current-buffer)))
 

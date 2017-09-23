@@ -2,5 +2,5 @@
 (require-package 'leuven-theme)
 (require-package 'flatui-theme)
 (require-package 'material-theme)
-(load-theme 'leuven t)
+(load-theme 'zenburn t)
 (provide 'init-themes)

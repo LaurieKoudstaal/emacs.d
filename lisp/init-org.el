@@ -6,7 +6,7 @@
 (when *is-a-mac*
   (require-package 'org-mac-iCal))
 ;; (require-package 's)
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+;;(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 ; (require 'org-velocity)
 
 (add-to-list 'load-path (expand-file-name "org-mode\lisp" user-emacs-directory))
@@ -24,16 +24,6 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 
-;; The following setting is different from the document so that you
-;; can override the document org-agenda-files by setting your
-;; org-agenda-files in the variable org-user-agenda-files
-;;
-(setq org-user-agenda-files '("~/org"))
-(if (boundp 'org-user-agenda-files)
-    (setq org-agenda-files org-user-agenda-files)
-  (setq org-agenda-files (quote ("~/git/org"
-                               "~/git/org/client1"
-                               "~/git/client2"))))
 
 ;; Custom Key Bindings
 (global-set-key (kbd "<f12>") 'org-agenda)
@@ -2173,7 +2163,13 @@ typical word processor."
    (awk . t)))
 
 ;(setq org-hid-leading-stars t)
-;(require 'org-bullets)
+					;(require 'org-bullets)
 
+;; SET THE ORG AGENDA FILES
+(setq org-agenda-files '("~/org"))
+
+
+;; MAKE SURE THAT TABLES ARE FIXED-PITCH
+(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
 
 (provide 'init-org)

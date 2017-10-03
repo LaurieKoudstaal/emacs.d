@@ -42,6 +42,7 @@
 (require 'init-gpg)
 (require 'init-powerline)
 (require 'init-org-crypt)
+(require 'init-mu4e)
 
 (when (file-exists-p custom-file)
   (load custom-file))

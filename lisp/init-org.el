@@ -89,7 +89,7 @@
   (switch-to-buffer "*scratch*"))
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+      (quote ((sequence "BACKLOG(b)" "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
 (setq org-todo-keyword-faces
@@ -130,6 +130,8 @@
 (setq org-capture-templates
       (quote (("t" "todo" entry (file "~/org/refile.org")
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+	      ("b" "backlog" entry (file "~/org/refile.org")
+               "* BACKLOG %?\n%U\n%a\n" :clock-in t :clock-resume t)
               ("r" "respond" entry (file "~/org/refile.org")
                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
               ("n" "note" entry (file "~/org/refile.org")
@@ -263,6 +265,9 @@
                 (tags "-REFILE/"
                       ((org-agenda-overriding-header "Tasks to Archive")
                        (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+                       (org-tags-match-list-sublevels nil)))
+	       (tags-todo "BACKLOG"
+                      ((org-agenda-overriding-header "Backlog")
                        (org-tags-match-list-sublevels nil))))
                nil))))
 

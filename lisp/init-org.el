@@ -9,6 +9,7 @@
 ;;(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 ; (require 'org-velocity)
 
+(require-package 'visual-fill-column)
 (add-to-list 'load-path (expand-file-name "org-mode\lisp" user-emacs-directory))
 
 ;; Set org directory
@@ -16,6 +17,12 @@
 
 ;; Default org file
 (setq org-default-notes-file "~/org/refile.org")
+
+;; SETUP ORG MOBILE
+(setq org-mobile-inbox-for-pull "~/org/mobile.org")
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+(setq org-mobile-use-encryption t)
+(setq org-mobile-encryption-password "hydro959\\Arabist")
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 ;;
@@ -2100,9 +2107,11 @@ typical word processor."
         (when (eq major-mode 'org)
           (kill-local-variable 'buffer-face-mode-face))
         (buffer-face-mode 1)
+	(visual-fill-column-mode 1)
         ;;(delete-selection-mode 1)
         (set (make-local-variable 'blink-cursor-interval) 0.6)
         (set (make-local-variable 'show-trailing-whitespace) nil)
+	(setq whitespace-style '(face empty tabs))
         (flyspell-mode 1)
         (when (fboundp 'visual-line-mode)
           (visual-line-mode 1)))
@@ -2110,6 +2119,8 @@ typical word processor."
     (kill-local-variable 'word-wrap)
     (kill-local-variable 'cursor-type)
     (kill-local-variable 'show-trailing-whitespace)
+    (kill-local-variable 'whitespace-style)
+    (visual-fill-column-mode -1)
     (buffer-face-mode -1)
     ;; (delete-selection-mode -1)
     (flyspell-mode -1)

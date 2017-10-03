@@ -10,7 +10,8 @@
 ; (require 'org-velocity)
 
 (add-to-list 'load-path (expand-file-name "org-mode\lisp" user-emacs-directory))
-
+(add-to-list 'load-path (expand-file-name "org-mode\contrib\lisp" user-emacs-directory))
+(require-package 'org-mime)
 ;; Set org directory
 (setq org-directory "~/org")
 

@@ -2179,14 +2179,10 @@ typical word processor."
    (sqlite . t)
    (awk . t)))
 
-;(setq org-hid-leading-stars t)
-					;(require 'org-bullets)
+
+(setq org-hide-leading-stars t)
 
 ;; SET THE ORG AGENDA FILES
 (setq org-agenda-files '("~/org"))
-
-
-;; MAKE SURE THAT TABLES ARE FIXED-PITCH
-(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
 
 (provide 'init-org)

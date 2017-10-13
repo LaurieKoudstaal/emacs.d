@@ -1,6 +1,6 @@
 ;; GOD MODE
 (require-package 'god-mode)
-(global-set-key (kbd "M-g") 'god-mode-all)
+(global-set-key (kbd "M-g") 'god-mode)
 
 (defun my-update-cursor ()
   (cond ((or (bound-and-true-p god-mode)

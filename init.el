@@ -42,6 +42,7 @@
 (require 'init-powerline)
 (require 'init-org-crypt)
 (require 'init-mu4e)
+(require 'init-go-mode)
 (require 'init-deft)
 
 (when (file-exists-p custom-file)

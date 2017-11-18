@@ -11,7 +11,8 @@
 
 (require-package 'visual-fill-column)
 (add-to-list 'load-path (expand-file-name "org-mode\lisp" user-emacs-directory))
-
+(add-to-list 'load-path (expand-file-name "org-mode\contrib\lisp" user-emacs-directory))
+(require-package 'org-mime)
 ;; Set org directory
 (setq org-directory "~/org")
 
@@ -96,7 +97,7 @@
   (switch-to-buffer "*scratch*"))
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+      (quote ((sequence "BACKLOG(b)" "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
 (setq org-todo-keyword-faces
@@ -137,6 +138,8 @@
 (setq org-capture-templates
       (quote (("t" "todo" entry (file "~/org/refile.org")
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+	      ("b" "backlog" entry (file "~/org/refile.org")
+               "* BACKLOG %?\n%U\n%a\n" :clock-in t :clock-resume t)
               ("r" "respond" entry (file "~/org/refile.org")
                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
               ("n" "note" entry (file "~/org/refile.org")
@@ -157,7 +160,7 @@
   (interactive)
   (save-excursion
     (beginning-of-line 0)
-    (org-remove-empty-drawer-at "LOGBOOK" (point))))
+    (org-remove-empty-drawer-at (point))))
 
 (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
 
@@ -270,6 +273,9 @@
                 (tags "-REFILE/"
                       ((org-agenda-overriding-header "Tasks to Archive")
                        (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+                       (org-tags-match-list-sublevels nil)))
+	       (tags-todo "BACKLOG"
+                      ((org-agenda-overriding-header "Backlog")
                        (org-tags-match-list-sublevels nil))))
                nil))))
 
@@ -2173,14 +2179,10 @@ typical word processor."
    (sqlite . t)
    (awk . t)))
 
-;(setq org-hid-leading-stars t)
-					;(require 'org-bullets)
+
+(setq org-hide-leading-stars t)
 
 ;; SET THE ORG AGENDA FILES
 (setq org-agenda-files '("~/org"))
-
-
-;; MAKE SURE THAT TABLES ARE FIXED-PITCH
-(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
 
 (provide 'init-org)

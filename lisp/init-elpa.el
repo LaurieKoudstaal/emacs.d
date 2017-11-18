@@ -2,7 +2,7 @@
 (require 'package)
 
 ;; I like marmalade for breakfast.
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+;; (Add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 ;; Elpy is helpful for python
 (add-to-list 'package-archives

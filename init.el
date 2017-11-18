@@ -22,7 +22,6 @@
 (require 'init-gui)
 (require 'org-query)
 (require 'init-org)
-(require 'init-org-bullets)
 (require 'init-python-mode)
 (require 'init-smex)
 (require 'init-multiple-cursors)
@@ -44,6 +43,7 @@
 (require 'init-org-crypt)
 (require 'init-mu4e)
 (require 'init-go-mode)
+(require 'init-deft)
 
 (when (file-exists-p custom-file)
   (load custom-file))

@@ -12,7 +12,7 @@
 (require-package 'visual-fill-column)
 (add-to-list 'load-path (expand-file-name "org-mode\lisp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "org-mode\contrib\lisp" user-emacs-directory))
-(require-package 'org-mime)
+(require 'org-mime)
 ;; Set org directory
 (setq org-directory "~/org")
 
@@ -1742,8 +1742,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;;
 (global-set-key (kbd "<C-f6>") '(lambda () (interactive) (bookmark-set "SAVED")))
 (global-set-key (kbd "<f6>") '(lambda () (interactive) (bookmark-jump "SAVED")))
-
-(require 'org-mime)
 
 (setq org-agenda-skip-additional-timestamps-same-entry t)
 

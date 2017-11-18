@@ -2,7 +2,7 @@
 (require-package 'god-mode)
 (require-package 'key-chord)
 (key-chord-mode 1)
-(setq mac-command-modifier 'super)
+
 (key-chord-define-global "gg" 'god-mode-all)
 (global-set-key (kbd "M-]") 'god-mode-all)
 (global-set-key (kbd "<escape>") 'god-mode-all)

@@ -1,4 +1,5 @@
-(require-package 'deft)
+(add-to-list 'load-path (expand-file-name "deft" user-emacs-directory))
+(require 'deft)
 (setq deft-extensions '("org"))
 (setq deft-recursive t)
 (global-set-key (kbd "C-c C-d") 'deft)

@@ -1,61 +1,27 @@
-;;; An emacs init based on Steve Purcell's init.el
-
-(package-initialize)
-
-(let ((minver "24"))
-  (when (version<= emacs-version "24")
-    (error "Emacs out of date for this configuration. Upgrade to at least %s" minver)))
-
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
+
+;;; Detect system-type
 (defconst *is-a-mac* (eq system-type 'darwin))
 
-;; BOOTSTRAP CONFIG
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(require 'init-elpa)
-(require 'init-exec-path)
-(require 'init-osx-compat)
+
+;;; Set up melpa
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+(package-initialize)
 
-;; OTHER CONFIG
-(require 'init-osx-keys)
-(require 'init-elpy)
-(require 'init-gui)
-(require 'org-query)
-(require 'init-org)
-(require 'init-python-mode)
-(require 'init-smex)
-(require 'init-multiple-cursors)
-(require 'init-whitespace)
-(require 'init-magit)
-(require 'init-backups)
-(require 'init-web-mode)
-(require 'init-eshell)
-(require 'init-tramp)
-(require 'init-shell)
-(require 'init-ido)
-(require 'init-undo-tree)
-(require 'init-js2)
-(require 'init-mssql)
-(require 'init-god-mode)
-(require 'init-fonts)
-(require 'init-gpg)
-(require 'init-powerline)
-(require 'init-org-crypt)
-(require 'init-mu4e)
-(require 'init-go-mode)
-(require 'init-deft)
+
+;;; GUI
+(menu-bar-mode -1)
+(tool-bar-mode -1)
 
-(when (file-exists-p custom-file)
-  (load custom-file))
-
-(require 'init-themes)
-
-;;----------------------------------------------------------------------------
-;; Allow users to provide an optional "init-local" containing personal settings
-;;----------------------------------------------------------------------------
-(when (file-exists-p (expand-file-name "init-local.el" user-emacs-directory))
-  (error "Please move init-local.el to ~/.emacs.d/lisp"))
-(require 'init-local nil t)
-
-(provide 'init)
-
+
+;;; Keyboard Remappings
+(setq mac-command-modifier 'control)
+(setq mac-option-modifier 'meta)

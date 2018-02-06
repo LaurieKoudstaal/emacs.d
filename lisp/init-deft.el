@@ -1,5 +1,0 @@
-(require-package 'deft)
-(setq deft-extensions '("org"))
-(setq deft-recursive t)
-(global-set-key (kbd "C-c C-d") 'deft)
-(provide 'init-deft)

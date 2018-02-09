@@ -61,17 +61,10 @@ re-downloaded in order to locate PACKAGE."
 
 
 
-;;; Enable theme
-(require-package 'zenburn-theme)
-(require 'zenburn-theme)
-(load-theme 'zenburn)
-
-
-
 ;;; God mode
 (require-package 'god-mode)
 (require 'god-mode)
-(global-set-key (kbd "<escape>") 'god-local-mode)
+(global-set-key (kbd "<escape>") 'god-mode-all)
 (defun my-update-cursor ()
   (setq cursor-type (if (or god-local-mode buffer-read-only)
                         'box
@@ -82,14 +75,25 @@ re-downloaded in order to locate PACKAGE."
 
 (defun c/god-mode-update-cursor ()
   (let ((limited-colors-p (> 257 (length (defined-colors)))))
-    (cond (god-local-mode (progn
-                            (set-face-background 'mode-line (if limited-colors-p "white" "#e9e2cb"))
-                            (set-face-background 'mode-line-inactive (if limited-colors-p "white" "#e9e2cb"))))
+    (cond ((or (bound-and-true-p god-local-mode)
+               (bound-and-true-p buffer-read-only))
+           (progn
+             (set-face-background 'mode-line (if limited-colors-p "white" "salmon3"))
+             (set-face-background 'mode-line-inactive (if limited-colors-p "white" "salmon4"))
+             (set-face-background 'cursor "salmon")))
           (t (progn
                (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
-               (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832")))))))
+               (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832"))
+               (set-face-background 'cursor "light gray"))))))
+
+
+;;; Org Mode
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
 
 
+
 ;; Custom settings
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -99,6 +103,7 @@ re-downloaded in order to locate PACKAGE."
  '(custom-safe-themes
    (quote
     ("599f1561d84229e02807c952919cd9b0fbaa97ace123851df84806b067666332" default)))
+ '(org-agenda-files (quote ("~/org/projects.org")))
  '(package-selected-packages (quote (god-mode better-defaults))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -106,3 +111,11 @@ re-downloaded in order to locate PACKAGE."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+
+;;; Enable theme
+(require-package 'zenburn-theme)
+(require 'zenburn-theme)
+(load-theme 'zenburn)
+

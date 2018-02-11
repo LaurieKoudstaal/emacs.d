@@ -94,6 +94,11 @@ re-downloaded in order to locate PACKAGE."
 
 
 
+;;; Org Babel languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages '((sqlite . t)))
+
+
 ;; Custom settings
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

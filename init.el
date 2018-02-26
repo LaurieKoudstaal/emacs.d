@@ -88,10 +88,11 @@ re-downloaded in order to locate PACKAGE."
 
 
 ;;; Org Mode
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("\\org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
-
+(setq org-default-notes-file (concat org-directory "/projects.org"))
+(define-key global-map "\C-cc" 'org-capture)
 
 
 ;;; Org Babel languages
@@ -105,10 +106,11 @@ re-downloaded in order to locate PACKAGE."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/bookmarks")
  '(custom-safe-themes
    (quote
-    ("599f1561d84229e02807c952919cd9b0fbaa97ace123851df84806b067666332" default)))
- '(org-agenda-files (quote ("~/org/projects.org")))
+    ("cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "599f1561d84229e02807c952919cd9b0fbaa97ace123851df84806b067666332" default)))
+ '(org-agenda-files (quote ("~/Egnyte/Org/projects.org")))
  '(package-selected-packages (quote (god-mode better-defaults))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

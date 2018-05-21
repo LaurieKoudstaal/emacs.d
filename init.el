@@ -91,7 +91,7 @@ re-downloaded in order to locate PACKAGE."
 (add-to-list 'auto-mode-alist '("\\org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
-(setq org-directory "/Users/laurie.koudstaal/org")
+(setq org-directory "~/org")
 (setq org-default-notes-file (concat org-directory "/projects.org"))
 (define-key global-map "\C-cc" 'org-capture)
 
@@ -123,7 +123,7 @@ re-downloaded in order to locate PACKAGE."
     ("cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "599f1561d84229e02807c952919cd9b0fbaa97ace123851df84806b067666332" default)))
  '(org-agenda-files
    (quote
-    ("c:/Users/Laurie.Koudstaal/.egnyte/Private/laurie.koudstaal/Egnyte/Org/projects.org")))
+    ("~/org/projects.org")))
  '(package-selected-packages (quote (groovy-mode god-mode better-defaults))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

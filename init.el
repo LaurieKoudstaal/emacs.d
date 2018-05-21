@@ -42,8 +42,8 @@ re-downloaded in order to locate PACKAGE."
 
 ;;; Fonts
 (when *is-win*
-  (add-to-list 'default-frame-alist '(font . "Consolas Bold-10" ))
-  (set-face-attribute 'default t :font "Consolas Bold-10" ))
+  (add-to-list 'default-frame-alist '(font . "Consolas-10" ))
+  (set-face-attribute 'default t :font "Consolas-10" ))
 
 
 ;;; Keyboard Remappings
@@ -91,6 +91,7 @@ re-downloaded in order to locate PACKAGE."
 (add-to-list 'auto-mode-alist '("\\org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
+(setq org-directory "/Users/laurie.koudstaal/org")
 (setq org-default-notes-file (concat org-directory "/projects.org"))
 (define-key global-map "\C-cc" 'org-capture)
 
@@ -98,6 +99,16 @@ re-downloaded in order to locate PACKAGE."
 ;;; Org Babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages '((sqlite . t)))
+
+
+;;; Groovy mode
+(require-package 'groovy-mode)
+(require 'groovy-mode)
+
+
+
+;;; Magit setup
+(global-set-key (kbd "C-x g") 'magit-status)
 
 
 ;; Custom settings
@@ -110,8 +121,10 @@ re-downloaded in order to locate PACKAGE."
  '(custom-safe-themes
    (quote
     ("cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "599f1561d84229e02807c952919cd9b0fbaa97ace123851df84806b067666332" default)))
- '(org-agenda-files (quote ("~/Egnyte/Org/projects.org")))
- '(package-selected-packages (quote (god-mode better-defaults))))
+ '(org-agenda-files
+   (quote
+    ("c:/Users/Laurie.Koudstaal/.egnyte/Private/laurie.koudstaal/Egnyte/Org/projects.org")))
+ '(package-selected-packages (quote (groovy-mode god-mode better-defaults))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

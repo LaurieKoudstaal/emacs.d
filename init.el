@@ -92,7 +92,7 @@ re-downloaded in order to locate PACKAGE."
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (setq org-directory "~/org")
-(setq org-default-notes-file (concat org-directory "/projects.org"))
+(setq org-default-notes-file (concat org-directory "/refile.org"))
 (define-key global-map "\C-cc" 'org-capture)
 
 

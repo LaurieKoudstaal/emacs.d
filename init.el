@@ -32,9 +32,9 @@
 
 
 ;;; Fonts
-;(when *is-win*
-;  (add-to-list 'default-frame-alist '(font . "Consolas-10" ))
-;  (set-face-attribute 'default t :font "Consolas-10" ))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10" ))
+(set-face-attribute 'default t :font "DejaVu Sans Mono-10")
+(set-face-attribute 'variable-pitch t :font "DejaVu Sans-10")
 
 
 ;;; Keyboard Remappings

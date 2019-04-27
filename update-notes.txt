@@ -1,0 +1,7 @@
+to add a new subtree:
+git remote add -f <package-remote-name> <url-to-git-server>
+git subtree add --prefix site-lisp/<package-name> --squash <package-remote-name> master
+
+to update:
+git fetch <package-remote-name> master
+git subtree pull --prefix site-lisp/<package-name> --squash <package-remote-name> master

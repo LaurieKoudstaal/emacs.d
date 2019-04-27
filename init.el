@@ -6,18 +6,24 @@
 
 ;;; Add site lisp
 (eval-when-compile (require 'cl))
-(defun sanityinc/add-subdirs-to-load-path (parent-dir)
+(defun lkk/add-subdirs-to-load-path (parent-dir)
   "Adds every non-hidden subdir of PARENT-DIR to `load-path'."
   (let* ((default-directory parent-dir))
     (progn
-      (setq load-path
+      (setq load-path      
             (append
-             (remove-if-not
+             (remove-if (lambda (dir) (file-directory-p (expand-file-name "lisp/" dir)))
+	      (remove-if-not
               (lambda (dir) (file-directory-p dir))
-              (directory-files (expand-file-name parent-dir) t "^[^\\.]"))
-             load-path)))))
+              (directory-files (expand-file-name parent-dir) t "^[^\\.]")))
+             (append
+              (remove-if-not 
+               (lambda (dir) (file-directory-p dir))
+               (mapcar (lambda (dir) (expand-file-name "lisp/" dir)) (directory-files (expand-file-name  parent-dir) t "^[^\\.]")))
+	      load-path))))))
 
-(sanityinc/add-subdirs-to-load-path
+
+(lkk/add-subdirs-to-load-path
  (expand-file-name "site-lisp/" user-emacs-directory))
 
 (add-to-list 'load-path
@@ -63,7 +69,6 @@
 
 
 ;;; Magit setup
-(require 'dash)
 (require 'magit)
 (global-set-key (kbd "C-c g") 'magit-status)
 

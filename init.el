@@ -29,10 +29,6 @@
 (add-to-list 'load-path
  (expand-file-name "site-lisp/magit/lisp" user-emacs-directory))
 
-
-;;; GUI elements
-(menu-bar-mode 1)
-(tool-bar-mode -1)
 
 
 ;;; Fonts
@@ -48,10 +44,25 @@
 (when *is-win*
   (setq w32-apps-modifier 'control))
 
-
 
 ;;; Better defaults package
 (require 'better-defaults)
+
+
+
+;;; smex
+(require 'smex)
+(smex-initialize)
+
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
+;;; GUI elements
+(menu-bar-mode 1)
+(tool-bar-mode -1)
+
 
 
 ;;; Org Mode

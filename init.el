@@ -76,7 +76,7 @@
 
 (setq magit-completing-read-function 'magit-ido-completing-read)
 (setq gnus-completing-rad-function 'gnus-ido-completing-read)
-; (setq ess-use-ido t)
+(setq ess-use-ido t)
 
 
 ;;; Org Mode
@@ -92,6 +92,13 @@
 ;(org-babel-do-load-languages
 ; 'org-babel-load-languages '((sqlite . t)))
 
+
+;;; Zenburn theme
+(add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory))
+(setq zenburn-use-variable-pitch t)
+(setq zenburn-scale-org-headlines t)
+(setq zenburn-scale-outline-headlines t)
+(load-theme 'zenburn t)
 
 
 

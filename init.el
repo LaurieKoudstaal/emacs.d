@@ -48,6 +48,15 @@
 ;;; Better defaults package
 (require 'better-defaults)
 
+
+;;; Magit setup
+(require 'magit)
+(global-set-key (kbd "C-c g") 'magit-status)
+
+
+;;; restore some GUI elements
+(menu-bar-mode 1)
+(tool-bar-mode -1)
 
 
 ;;; smex
@@ -59,10 +68,15 @@
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 
-;;; GUI elements
-(menu-bar-mode 1)
-(tool-bar-mode -1)
+;;; ido-completing-read+
+(ido-mode 1)
+(ido-everywhere 1)
+(require 'ido-completing-read+)
+(ido-ubiquitous-mode 1)
 
+(setq magit-completing-read-function 'magit-ido-completing-read)
+(setq gnus-completing-rad-function 'gnus-ido-completing-read)
+; (setq ess-use-ido t)
 
 
 ;;; Org Mode
@@ -78,10 +92,6 @@
 ;(org-babel-do-load-languages
 ; 'org-babel-load-languages '((sqlite . t)))
 
-
-;;; Magit setup
-(require 'magit)
-(global-set-key (kbd "C-c g") 'magit-status)
 
 
 

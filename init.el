@@ -20,6 +20,9 @@
 (sanityinc/add-subdirs-to-load-path
  (expand-file-name "site-lisp/" user-emacs-directory))
 
+(add-to-list 'load-path
+ (expand-file-name "site-lisp/magit/lisp" user-emacs-directory))
+
 
 ;;; GUI elements
 (menu-bar-mode 1)
@@ -60,6 +63,7 @@
 
 
 ;;; Magit setup
+(require 'magit)
 (global-set-key (kbd "C-c g") 'magit-status)
 
 

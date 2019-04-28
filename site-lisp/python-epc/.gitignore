@@ -1,5 +1,0 @@
-.tox
-doc/build
-.cask
-MANIFEST
-*.pyc

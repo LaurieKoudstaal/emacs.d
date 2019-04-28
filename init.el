@@ -49,17 +49,12 @@
 (lkk/add-subdirs-to-load-path
  (expand-file-name "site-lisp/" user-emacs-directory))
 
-
-
-;;; Fonts
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10" ))
-(set-face-attribute 'default t :font "DejaVu Sans Mono-10")
-(set-face-attribute 'variable-pitch t :font "DejaVu Sans-10")
+(require 'init-elpa)
 
 
 
 ;;;Page break lines
-(require 'page-break-lines)
+(require-package 'page-break-lines)
 (require 'tinypage)
 (page-break-lines-mode)
 
@@ -74,25 +69,20 @@
 
 
 ;;; Better defaults package
-(require 'better-defaults)
+(require-package 'better-defaults)
 
 
 ;;; Magit setup
-(require 'magit)
+(require-package 'magit)
 (when *is-win*
   ;;; Use ssh-agency
-  (require 'ssh-agency)
+  (require-package 'ssh-agency)
   (setenv "SSH_ASKPASS" "git-gui--askpass"))
 (global-set-key (kbd "C-c g") 'magit-status)
 
 
-;;; restore some GUI elements
-(menu-bar-mode 1)
-(tool-bar-mode -1)
-
-
 ;;; smex
-(require 'smex)
+(require-package 'smex)
 (smex-initialize)
 
 (global-set-key (kbd "M-x") 'smex)
@@ -103,7 +93,7 @@
 ;;; ido-completing-read+
 (ido-mode 1)
 (ido-everywhere 1)
-(require 'ido-completing-read+)
+(require-package 'ido-completing-read+)
 (ido-ubiquitous-mode 1)
 
 (setq magit-completing-read-function 'magit-ido-completing-read)
@@ -112,7 +102,7 @@
 
 
 ;;; Org Mode
-(require 'org)
+(require-package 'org-plus-contrib)
 (require 'org-info)
 (require 'org-show)
 (require 'org-contacts)
@@ -158,7 +148,7 @@
 (setq org-duration-format (quote h:mm))
 
 ;;; Org Journal
-; (require 'org-journal)
+(require-package 'org-journal)
 (setq org-journal-dir (concat org-directory "/journal"))
 (defun lkk/get-formal-time ()
   (replace-regexp-in-string "m$" ".m." (s-downcase (format-time-string "%l:%M %p"))))
@@ -215,8 +205,8 @@ typical word processor."
 
 
 ;;; Python IDE
-(require 'jedi)
-(require 'elpy)
+(require-package 'jedi)
+(require-package 'elpy)
 (elpy-enable)
 (setq elpy-rpc-backend "jedi")
 
@@ -225,32 +215,32 @@ typical word processor."
 (unless *is-win*
   (setq lkk/emacs-w3m-directory (expand-file-name "lisp/emacs-w3m/" user-emacs-directory))
   (when (file-exists-p lkk/emacs-w3m-directory)
-    (require 'flim)
-    (require 'apel)
+    (require-package 'flim)
+    (require-package 'apel)
     (add-to-list 'load-path lkk/emacs-w3m-directory)
     (add-to-list 'load-path (expand-file-name "shimbun" lkk/emacs-w3m-directory))
     (setq w3m-command "/usr/bin/w3m")
-    (require 'w3m)))
+    (require-package 'w3m)))
 
 
 
 ;; deft
-(require 'deft)
+(require-package 'deft)
 (setq deft-recursive t)
 
 
 
 ;;; Rest client for making REST requests from emacs
-(require 'restclient)
+(require-package 'restclient)
 
 
 ;;; Markdown mode
-(require 'markdown-mode)
+(require-package 'markdown-mode)
 
 
 
 ;;; Pomodoro
-(require 'org-pomodoro)
+(require-package 'org-pomodoro)
 (global-set-key (kbd "C-c p") 'org-pomodoro)
 (setq org-pomodoro-start-sound-p nil)
 (setq org-pomodoro-ticking-frequency 300)
@@ -264,25 +254,34 @@ typical word processor."
 
 
 ;;; God mode
+(require-package 'god-mode)
 (require 'god-mode)
 (global-set-key (kbd "<escape>") 'god-mode-all)
 (define-key god-local-mode-map (kbd ".") 'repeat)
-(defun lkk/god-mode-background
+(defun lkk/god-mode-background ()
   (if (or god-local-mode buffer-read-only)
       (set-background-color "coral4")
-    (set-background-color"#00393B")))
+    (set-background-color "#00393B")))
 
 (add-hook 'god-mode-enabled-hook 'lkk/god-mode-background)
 (add-hook 'god-mode-disabled-hook 'lkk/god-mode-background)
 
 
 ;;; Zenburn theme
-(add-to-list 'custom-theme-load-path (expand-file-name "themes/" user-emacs-directory))
+(require-package 'zenburn-theme)
 (setq zenburn-use-variable-pitch t)
 (setq zenburn-scale-org-headlines t)
 (setq zenburn-scale-outline-headlines t)
 (load-theme 'zenburn t)
-(load-theme 'birbo)
+
+
+;;; Theme customizations
+(set-face-attribute 'widget-field t :background "#50898B" :foreground "#DCDCCC")
+(set-face-attribute 'cursor t :background "#B0D9DB" :foreground "#DCDCCC")
+(set-face-attribute 'default t :inherit nil :stipple nil :background "#00393B" :foreground "#DCDCCC" :font "DejaVu Sans Mono-10")
+(set-face-attribute 'fringe nil :background "#10494B" :foreground "#DCDCCC")
+(set-face-attribute 'variable-pitch t :font "DejaVu Sans-10")
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10" ))
 
 
 ;;----------------------------------------------------------------------------
@@ -296,3 +295,17 @@ typical word processor."
 
 
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (zenburn-theme god-mode org-pomodoro markdown-mode restclient deft elpy jedi org-journal org-plus-contrib ido-completing-read+ smex ssh-agency magit better-defaults page-break-lines fullframe seq))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

@@ -114,12 +114,10 @@
 ;;; Org Mode
 (require 'org)
 (require 'org-info)
-(require 'org-journal)
 (require 'org-show)
 (require 'org-contacts)
 (add-to-list 'auto-mode-alist '("\\org\\'" . org-mode))
 (setq org-directory (expand-file-name "~/org"))
-(setq org-journal-dir (concat org-directory "/journal"))
 (setq org-default-notes-file (expand-file-name "/organiser.org" org-directory))
 (setq org-agenda-files nil)
 (add-to-list 'org-agenda-files org-directory)
@@ -160,9 +158,10 @@
 (setq org-duration-format (quote h:mm))
 
 ;;; Org Journal
+; (require 'org-journal)
+(setq org-journal-dir (concat org-directory "/journal"))
 (defun lkk/get-formal-time ()
   (replace-regexp-in-string "m$" ".m." (s-downcase (format-time-string "%l:%M %p"))))
-(require 'org-journal)
 (setq org-journal-file-format "%Y-%m-%d.org")
 (setq org-journal-date-format "%A, %d %B %Y")
 (setq org-journal-time-format "%l:%M %p")

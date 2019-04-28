@@ -28,28 +28,26 @@
 
 ;;; Add site lisp
 (eval-when-compile (require 'cl))
+(defun lkk/list-recursive-subdirs (parent-dir)
+  (let* ((sub-dirs (remove-if-not
+		    (lambda (dir) (file-directory-p dir))
+		    (directory-files (expand-file-name parent-dir) t "^[^\\.]"))))
+    (cons parent-dir
+            (when (not (null sub-dirs))
+      	      (apply #'append (mapcar 'lkk/list-recursive-subdirs sub-dirs))))))
+	  
 (defun lkk/add-subdirs-to-load-path (parent-dir)
   "Adds every non-hidden subdir of PARENT-DIR to `load-path'."
   (let* ((default-directory parent-dir))
     (progn
       (setq load-path      
-            (append
-             (remove-if (lambda (dir) (file-directory-p (expand-file-name "lisp/" dir)))
-	      (remove-if-not
-              (lambda (dir) (file-directory-p dir))
-              (directory-files (expand-file-name parent-dir) t "^[^\\.]")))
-             (append
-              (remove-if-not 
-               (lambda (dir) (file-directory-p dir))
-               (mapcar (lambda (dir) (expand-file-name "lisp/" dir)) (directory-files (expand-file-name  parent-dir) t "^[^\\.]")))
-	      load-path))))))
-
+            (append (remove-if
+                     (lambda (dir) (null (file-expand-wildcards (expand-file-name "*.el" dir))))
+                     (lkk/list-recursive-subdirs parent-dir))
+		     load-path)))))
 
 (lkk/add-subdirs-to-load-path
  (expand-file-name "site-lisp/" user-emacs-directory))
-
-(add-to-list 'load-path
- (expand-file-name "site-lisp/magit/lisp" user-emacs-directory))
 
 
 
@@ -62,7 +60,7 @@
 
 ;;;Page break lines
 (require 'page-break-lines)
-(require 'page-mode)
+(require 'tinypage)
 (page-break-lines-mode)
 
 
@@ -83,7 +81,6 @@
 (require 'magit)
 (when *is-win*
   ;;; Use ssh-agency
-  (require-package 'ssh-agency)
   (require 'ssh-agency)
   (setenv "SSH_ASKPASS" "git-gui--askpass"))
 (global-set-key (kbd "C-c g") 'magit-status)
@@ -165,7 +162,7 @@
 ;;; Org Journal
 (defun lkk/get-formal-time ()
   (replace-regexp-in-string "m$" ".m." (s-downcase (format-time-string "%l:%M %p"))))
-(require-package 'org-journal)
+(require 'org-journal)
 (setq org-journal-file-format "%Y-%m-%d.org")
 (setq org-journal-date-format "%A, %d %B %Y")
 (setq org-journal-time-format "%l:%M %p")
@@ -229,8 +226,8 @@ typical word processor."
 (unless *is-win*
   (setq lkk/emacs-w3m-directory (expand-file-name "lisp/emacs-w3m/" user-emacs-directory))
   (when (file-exists-p lkk/emacs-w3m-directory)
-    (require-package 'flim)
-    (require-package 'apel)
+    (require 'flim)
+    (require 'apel)
     (add-to-list 'load-path lkk/emacs-w3m-directory)
     (add-to-list 'load-path (expand-file-name "shimbun" lkk/emacs-w3m-directory))
     (setq w3m-command "/usr/bin/w3m")
@@ -254,7 +251,6 @@ typical word processor."
 
 
 ;;; Pomodoro
-(require-package 'org-pomodoro)
 (require 'org-pomodoro)
 (global-set-key (kbd "C-c p") 'org-pomodoro)
 (setq org-pomodoro-start-sound-p nil)
@@ -269,7 +265,6 @@ typical word processor."
 
 
 ;;; God mode
-(require-package 'god-mode)
 (require 'god-mode)
 (global-set-key (kbd "<escape>") 'god-mode-all)
 (define-key god-local-mode-map (kbd ".") 'repeat)

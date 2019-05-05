@@ -101,6 +101,10 @@
 (setq ess-use-ido t)
 
 
+;;; idle highlight
+(require-package 'idle-highlight-mode)
+
+
 ;;; Org Mode
 (require-package 'org-plus-contrib)
 (require 'org-info)
@@ -108,7 +112,7 @@
 (require 'org-contacts)
 (add-to-list 'auto-mode-alist '("\\org\\'" . org-mode))
 (setq org-directory (expand-file-name "~/org"))
-(setq org-default-notes-file (expand-file-name "/organiser.org" org-directory))
+(setq org-default-notes-file (expand-file-name "organiser.org" org-directory))
 (setq org-agenda-files nil)
 (add-to-list 'org-agenda-files org-directory)
 
@@ -207,8 +211,10 @@ typical word processor."
 ;;; Python IDE
 (require-package 'jedi)
 (require-package 'elpy)
+(require-package 'flycheck)
 (elpy-enable)
 (setq elpy-rpc-backend "jedi")
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 
 ;;; W3M stuff
@@ -281,6 +287,7 @@ typical word processor."
 (set-face-attribute 'default t :inherit nil :stipple nil :background "#00393B" :foreground "#DCDCCC" :font "DejaVu Sans Mono-10")
 (set-face-attribute 'fringe nil :background "#10494B" :foreground "#DCDCCC")
 (set-face-attribute 'variable-pitch t :font "DejaVu Sans-10")
+(set-face-attribute 'region t :foreground "#D0BF8F" :background "#5F5F5F")
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10" ))
 
 
@@ -302,7 +309,7 @@ typical word processor."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (zenburn-theme god-mode org-pomodoro markdown-mode restclient deft elpy jedi org-journal org-plus-contrib ido-completing-read+ smex ssh-agency magit better-defaults page-break-lines fullframe seq))))
+    (zenburn-theme god-mode org-pomodoro markdown-mode restclient deft flycheck elpy jedi org-journal org-plus-contrib idle-highlight-mode ido-completing-read+ smex ssh-agency magit better-defaults page-break-lines fullframe seq))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
